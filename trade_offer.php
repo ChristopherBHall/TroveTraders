@@ -37,6 +37,8 @@ $data2 = $con->query("SELECT * FROM trades WHERE tradeid = $tradeIDGET");
             $tradeDatetime = $tradeRows['datetime']; 
             $tradeUsername = $tradeRows['username'];
             $tradeFluxAmount = $tradeRows['currencyamount'];
+			$tradeNote = $tradeRows['tradenote'];
+			$tradeClosed = $tradeRows['closed'];
 
             } 
 $itemData = $con->query("SELECT * FROM items WHERE itemID = '$tradeItemID'");
@@ -56,24 +58,24 @@ $itemData = $con->query("SELECT * FROM items WHERE itemID = '$tradeItemID'");
 
 <div class="col-lg-2 col-md-2 col-sm-6 col-xs-0"></div>
 <div class="col-lg-8 col-md-8 col-sm-6 col-xs-12" id="recenttradesbackground">
-	<div clas="row">
+	<div class="row">
 			<div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
 				<img src="Images/Items/<?php echo $tradeItemID; ?>.png" id="recenttradesimage"/>
 				
 				</div>
 				<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-					<div clas="row">
+					<div class="row">
 						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 									<b id="recenttradeitemdataname">
-									<?php echo $itemDataName; ?>
+									<?php echo  "&nbsp;&nbsp;&nbsp;" . $itemDataName; ?>
 					</div>
 						</div>
 							<div clas="row">
-							<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-										Seller: <?php echo $tradeUsername;?>            
+								<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+										Seller: <?php echo "&nbsp;&nbsp;&nbsp;" . $tradeUsername;?>            
 										</b>
-						</div>
-					</div>
+								</div>
+							</div>
 				</div>
 					<div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
 
@@ -85,8 +87,19 @@ $itemData = $con->query("SELECT * FROM items WHERE itemID = '$tradeItemID'");
 		</div>
 	</div>
 </div>
+<div class="row">
 <div class="col-lg-2 col-md-2 col-sm-6 col-xs-0"></div>
-<br/><br/><br/><br/><br/><br/><br/><br/>
+<div class="col-lg-8 col-md-8 col-sm-6 col-xs-12" id="tradeoffercommentsbackground">
+<?php echo $tradeUsername . "'s trade note: " . "<br/><br/>" . $tradeNote; ?></div>
+<div class="col-lg-2 col-md-2 col-sm-6 col-xs-0"></div>
+</div>
+<div class="row">
+<div class="col-lg-2 col-md-2 col-sm-6 col-xs-0"></div>
+<div class="col-lg-8 col-md-8 col-sm-6 col-xs-12" id="tradeoffercommentsbottom">
+<?php echo "Close Trade"; ?>
+</div>
+<div class="col-lg-2 col-md-2 col-sm-6 col-xs-0"></div>
+<br/><br/><br/><br/><br/><br/><br/>
     <?php
     
 
@@ -174,7 +187,7 @@ $i++;
     $commentername = $_SESSION['username'];
 }
 
-else { echo '<div id="submissionfieldbackgroundnotloggedin"><br/><br/>You need to log in before you can comment on this trade!</div>'; }
+else { echo '</div> <div class="row"><div id="submissionfieldbackgroundnotloggedin"><br/><br/>You need to log in before you can comment on this trade!</div>'; }
 ?>
 
     

@@ -29,6 +29,14 @@ $data = $con->query("SELECT * FROM trades ORDER BY datetime DESC");
 			$tradeLookingToBuy[] = $row['lookingtobuy'];
 			$tradeLookingToTrade[] = $row['lookingtotrade'];
 			$tradeLookingToDonate[] = $row['lookingtodonate'];
+			$tradeItemRarity[] = $row['itemrarity'];
+			$tradeItemPrimaryStat[] = $row['itemprimarystat'];
+			$tradeItemSecondaryStat[] = $row['itemsecondarystat'];
+			$tradeItemThirdStat[] = $row['itemthirdstat'];
+			$tradeItemFourthStat[] = $row['itemfourthstat'];
+			$tradeRingLevel[] = $row['ringlevel'];
+			$tradeItemAmount[] = $row['itemamount'];
+			$tradeClosed[] = $row['closed'];
             }
 $itemData = $con->query("SELECT * FROM items");
         while($itemDataRow = mysqli_fetch_assoc($itemData)){
@@ -37,6 +45,7 @@ $itemData = $con->query("SELECT * FROM items");
              $itemDataDesc[] = $itemDataRow['itemdesc'];
              $itemDataType[] = $itemDataRow['itemtype'];
              $itemDataReqLvl[] = $itemDataRow['itemrequiredlevel'];
+			 $itemDataItemRarity[] = $itemDataRow['itemrarity'];
              }
 function humanTiming ($time)
 {
@@ -88,47 +97,79 @@ for ($a = 0; $a < count($itemDataItemID); $a++){
     $orderedItemDesc[] = $itemDataDesc[$a];
     $orderedItemType[] = $itemDataType[$a];
     $orderedItemReqLvl[] = $itemDataReqLvl[$a];
+	$orderedItemRarity[] = $itemDataItemRarity[$a];
     }
 
 
 }
 
-
+if($tradeItemID[$i] == "" || $tradeClosed[$i] == 1){}
+else{
 ?>
 
 <div class="container">
 <div class="row">
 <div class="col-lg-2 col-md-2 col-sm-6 col-xs-0"></div>
-<div class="col-lg-8 col-md-8 col-sm-6 col-xs-12" id="recenttradesbackground">
+<?php if($orderedItemRarity[$i] == "Common"){ echo '<div class="col-lg-8 col-md-8 col-sm-6 col-xs-12" id="recenttradesbackground">'; }
+elseif($orderedItemRarity[$i] == "Uncommon"){ echo '<div class="col-lg-8 col-md-8 col-sm-6 col-xs-12" id="recenttradesbackgrounduncommon">'; }
+elseif($orderedItemRarity[$i] == "Rare"){ echo '<div class="col-lg-8 col-md-8 col-sm-6 col-xs-12" id="recenttradesbackgroundrare">'; }
+elseif($orderedItemRarity[$i] == "Epic"){ echo '<div class="col-lg-8 col-md-8 col-sm-6 col-xs-12" id="recenttradesbackgroundepic">'; }
+elseif($orderedItemRarity[$i] == "Legendary"){ echo '<div class="col-lg-8 col-md-8 col-sm-6 col-xs-12" id="recenttradesbackgroundlegendary">'; }
+elseif($orderedItemRarity[$i] == "Relic"){ echo '<div class="col-lg-8 col-md-8 col-sm-6 col-xs-12" id="recenttradesbackgroundrelic">'; }
+elseif($orderedItemRarity[$i] == "Resplendent"){ echo '<div class="col-lg-8 col-md-8 col-sm-6 col-xs-12" id="recenttradesbackgroundresplendent">'; }
+elseif($orderedItemRarity[$i] == "shadow"){ echo '<div class="col-lg-8 col-md-8 col-sm-6 col-xs-12" id="recenttradesbackgroundshadow">'; }
+elseif($orderedItemRarity[$i] == "radiant"){ echo '<div class="col-lg-8 col-md-8 col-sm-6 col-xs-12" id="recenttradesbackgroundradiant">'; }
+else{ echo '<div class="col-lg-8 col-md-8 col-sm-6 col-xs-12" id="recenttradesbackground">'; } ?>
 
 			<div clas="row">
 			<div class="col-lg-2 col-md-2 col-sm-2 col-xs-2" id="no-padding">
             <img src="Images/Items/<?php echo $tradeItemID[$i]; ?>.png" id="recenttradesimage"/>
 				
 				</div>
-				<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+				<div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
 					<div class="row">
 						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-									<b id="recenttradeitemdataname"><?php echo $orderedDataName[$i]; ?>
+						<?php if($tradeRingLevel[$i] >= 1){ 
+									echo '<b id="recenttradeitemdataname">' . $itemDataItemRarity[$i] . "&nbsp;&nbsp;&nbsp;" . $orderedDataName[$i] . "&nbsp;Lvl: " .$tradeRingLevel[$i]; }
+							  else { 
+									if($tradeItemAmount[$i] > 1){ echo '<b id="recenttradeitemdataname">' ?><?php echo "&nbsp;&nbsp;&nbsp;" . $orderedDataName[$i] . " x" . $tradeItemAmount[$i];} 
+										else  {echo '<b id="recenttradeitemdataname">' ?><?php echo "&nbsp;&nbsp;&nbsp;" . $orderedDataName[$i]; }
+								}
+									?>
 					</div>
 
 
 							<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 								<?php if($tradeLookingToSell[$i] == 1){
-										  $tradeType = "Seller : ";
+										  $tradeType = "&nbsp;&nbsp;&nbsp;" . "Seller : ";
 									  }elseif($tradeLookingToBuy[$i] == 1){
-										  $tradeType = "Buyer : ";
+										  $tradeType = "&nbsp;&nbsp;&nbsp;" . "Buyer : ";
 									  }elseif($tradeLookingToTrade[$i] == 1){
-										  $tradeType = "Trader : ";
+										  $tradeType = "&nbsp;&nbsp;&nbsp;" . "Trader : ";
 									  }
 									  elseif($tradeLookingToDonate[$i] == 1){
-										  $tradeType = "Giver : ";
+										  $tradeType = "&nbsp;&nbsp;&nbsp;" . "Giver : ";
 									  } 
 									  else { }
 									  ?>
 										 <?php echo $tradeType . $tradeUsername[$i]; ?>               
-										</b>
+										</b><br/>
+										<?php 
+										if($tradeItemPrimaryStat[$i] == ""){} else {
+										echo  '<b id="recenttradeitemdataname">' . "&nbsp;&nbsp;&nbsp;" . "Primary stat: " . $tradeItemPrimaryStat[$i] . '</b>';}
+										echo '<br/>';
+										if($tradeItemSecondaryStat[$i] == ""){} else {
+										echo  '<b id="recenttradeitemdataname">' . "&nbsp;&nbsp;&nbsp;" . "Secondary stat: " . $tradeItemSecondaryStat[$i] . '</b>'; }
+										if($tradeItemThirdStat[$i] == ""){} else {
+										echo '<br/>';
+										echo  '<b id="recenttradeitemdataname">' . "&nbsp;&nbsp;&nbsp;" . "Third stat: " . $tradeItemThirdStat[$i] . '</b>'; }
+										echo '<br/>';
+										if($tradeItemFourthStat[$i] == ""){} else {
+										echo  '<b id="recenttradeitemdataname">' . "&nbsp;&nbsp;&nbsp;" . "Fourth stat: " . $tradeItemFourthStat[$i] . '</b>'; }
+
+?>
 							</div>
+							
 					</div>
 				</div>
 					<div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
@@ -174,6 +215,7 @@ for ($a = 0; $a < count($itemDataItemID); $a++){
 										<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4" id="no-padding">
 												 <a href="trade_offer.php?tradeid=<?php echo $tradeTradeID[$i]; ?>"><img src="Images/MakeOffer.png" id="recenttrademakeofferimage"/></a></div>
 
+
 			</div>
 		</div>
 	</div>
@@ -184,6 +226,7 @@ for ($a = 0; $a < count($itemDataItemID); $a++){
 <div class="col-lg-2 col-md-2 col-sm-6 col-xs-0"></div>
 <br/>
 <?php
+}
 }
  ?>
 </body>
