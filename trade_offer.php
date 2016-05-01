@@ -7,7 +7,7 @@ session_start();
 ?>
 <html lang="en">
 <head>
-
+<!-- Css and page setup -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -18,15 +18,16 @@ session_start();
 
 <!-- Top of page Navbar -->
    <?php include 'navbar.php'; ?>
-
+   <!-- Makes sure that theres plenty of space after the navbar -->
       <br/>
          <br/>
             <br/>
                <br/>
                   <br/>
  <?php
+ //Gets the trade idea from the URL and sets its to tradeIDGET
 $tradeIDGET = $_GET['tradeid'];
-
+// Gets the log in for the SQL and allows us to pull that lovely data
 require 'Includes/connections.php';
 
 $data2 = $con->query("SELECT * FROM trades WHERE tradeid = $tradeIDGET");
@@ -51,24 +52,23 @@ $itemData = $con->query("SELECT * FROM items WHERE itemID = '$tradeItemID'");
              
         ?>
 		<!-- STARTING BOOTSTRAP DIV FOR TRADE WINDOW -->
+		<!-- This is going to create the small box of info show the trades information -->
 <div class="container">
-
-<div class="row">
-
-
-<div class="col-lg-2 col-md-2 col-sm-6 col-xs-0"></div>
-<div class="col-lg-8 col-md-8 col-sm-6 col-xs-12" id="recenttradesbackground">
+	<!-- This opens all of the trade background and box -->
 	<div class="row">
-			<div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-				<img src="Images/Items/<?php echo $tradeItemID; ?>.png" id="recenttradesimage"/>
+		<div class="col-lg-2 col-md-2 col-sm-6 col-xs-0"></div>
+			<div class="col-lg-8 col-md-8 col-sm-6 col-xs-12" id="recenttradesbackground">
+				<div class="row">
+					<div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+						<img src="Images/Items/<?php echo $tradeItemID; ?>.png" id="recenttradesimage"/>
 				
-				</div>
-				<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-					<div class="row">
-						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-									<b id="recenttradeitemdataname">
-									<?php echo  "&nbsp;&nbsp;&nbsp;" . $itemDataName; ?>
 					</div>
+					<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+						<div class="row">
+							<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+								<b id="recenttradeitemdataname">
+								<?php echo  "&nbsp;&nbsp;&nbsp;" . $itemDataName; ?>
+							</div>
 						</div>
 							<div clas="row">
 								<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -76,33 +76,36 @@ $itemData = $con->query("SELECT * FROM items WHERE itemID = '$tradeItemID'");
 										</b>
 								</div>
 							</div>
-				</div>
+					</div>
 					<div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
 
 					</div>
 				<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-				<b id="recenttradeitemprice">
+					<b id="recenttradeitemprice">
+					<!-- Reminder: Update this to include multiple currencies -->
 					Selling for: <?php echo $tradeFluxAmount;?></b>
 				</div>
+			</div>
 		</div>
 	</div>
+	<!-- This closes all of the trade background and box -->
+<div class="row">
+	<div class="col-lg-2 col-md-2 col-sm-6 col-xs-0"></div>
+	<div class="col-lg-8 col-md-8 col-sm-6 col-xs-12" id="tradeoffercommentsbackground">
+	<?php echo $tradeUsername . "'s trade note: " . "<br/><br/>" . $tradeNote; ?></div>
+	<div class="col-lg-2 col-md-2 col-sm-6 col-xs-0"></div>
 </div>
 <div class="row">
-<div class="col-lg-2 col-md-2 col-sm-6 col-xs-0"></div>
-<div class="col-lg-8 col-md-8 col-sm-6 col-xs-12" id="tradeoffercommentsbackground">
-<?php echo $tradeUsername . "'s trade note: " . "<br/><br/>" . $tradeNote; ?></div>
-<div class="col-lg-2 col-md-2 col-sm-6 col-xs-0"></div>
-</div>
-<div class="row">
-<div class="col-lg-2 col-md-2 col-sm-6 col-xs-0"></div>
-<div class="col-lg-8 col-md-8 col-sm-6 col-xs-12" id="tradeoffercommentsbottom">
-<?php echo "Close Trade"; ?>
-</div>
-<div class="col-lg-2 col-md-2 col-sm-6 col-xs-0"></div>
+	<div class="col-lg-2 col-md-2 col-sm-6 col-xs-0"></div>
+	<div class="col-lg-8 col-md-8 col-sm-6 col-xs-12" id="tradeoffercommentsbottom">
+		<?php echo "Close Trade"; ?>
+	</div>
+	<div class="col-lg-2 col-md-2 col-sm-6 col-xs-0"></div>
+	<!-- Space to gaurentee the comments a good amount of space from the notes and trade info -->
 <br/><br/><br/><br/><br/><br/><br/>
     <?php
     
-
+	// Pulls all of the trade infomation from the SQL to populate all of the comments
 $data = $con->query("SELECT * FROM traderesponses WHERE tradeid = $tradeIDGET ORDER BY commentdatetime");
 while ($row=mysqli_fetch_assoc($data)) {
             $commentTradeID[] = $row['tradeid'];
@@ -117,11 +120,11 @@ while ($row=mysqli_fetch_assoc($data)) {
 ?>
 
 
-
+<!-- Prints out the comments from the users -->
 <div class="row">
-<div class="col-lg-2 col-md-2 col-sm-6 col-xs-0"></div>
-<div class="col-lg-8 col-md-8 col-sm-6 col-xs-12">
-	<div class="row">
+	<div class="col-lg-2 col-md-2 col-sm-6 col-xs-0"></div>
+	<div class="col-lg-8 col-md-8 col-sm-6 col-xs-12">
+		<div class="row">
 <?php	while($i < count($comment)){ 
 ?>
  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id = "tradeoffercommentstitle">
@@ -130,24 +133,16 @@ while ($row=mysqli_fetch_assoc($data)) {
  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="tradeoffercommentsbackground">
 
  <?php 
- 
-
  echo "   " . $comment[$i]; 
-
- 
-
  ?>
- 
  </div>
  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="tradeoffercommentsbottom">
  <?php 
- 
 if($_SESSION["username"] == $commentUserName[$i] or $_SESSION['admin'] == true){
 ?>
 <a href="edit_comment.php?commentid=<?php echo $commentID[$i]; ?> ">
 <?php
     echo "edit comment";
-
     ?>
     </a><?php
     echo " / ";
@@ -155,7 +150,6 @@ if($_SESSION["username"] == $commentUserName[$i] or $_SESSION['admin'] == true){
 <a href="delete_comment.php?commentid=<?php echo $commentID[$i]; ?> ">
 <?php
     echo "delete comment";
-
     ?>
     </a>
 <?php
@@ -173,7 +167,7 @@ if($_SESSION["username"] == $commentUserName[$i] or $_SESSION['admin'] == true){
  <?php
 $i++;
 } 
-        //Make a Post! (Post Box and Submit Button)
+        //Make a Post! (Post Box and Submit Button) also checks for the login and info and pushes it into the sql
      if(isset($_SESSION["username"])) {
  echo ' <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="submissionfieldbackground">
     <form action="" method="post" id="submissionfield">

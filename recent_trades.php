@@ -3,7 +3,7 @@ require 'Includes/connections.php';
 ?>
 <html lang="en">
 <head>
-
+<!-- Sets the basic page stuff -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -16,7 +16,7 @@ require 'Includes/connections.php';
 </head>
 <body>
  <?php
-
+ // SQL pulls //
 $data = $con->query("SELECT * FROM trades ORDER BY datetime DESC");
         while($row = mysqli_fetch_assoc($data)){
             $tradeTradeID[] = $row['tradeid'];
@@ -47,16 +47,14 @@ $itemData = $con->query("SELECT * FROM items");
              $itemDataReqLvl[] = $itemDataRow['itemrequiredlevel'];
 			 $itemDataItemRarity[] = $itemDataRow['itemrarity'];
              }
+
+			 // Nice little function to figure out the time since the time the user had posted
 function humanTiming ($time)
 {
 
     $time = time() - $time; // to get the time since that moment
     $time = ($time<1)? 1 : $time;
     $tokens = array (
- //       31536000 => 'year',
-  //      2592000 => 'month',
-   //     604800 => 'week',
-   //     86400 => 'day',
         3600 => 'hour',
         60 => 'minute',
         1 => 'second'
@@ -110,6 +108,7 @@ else{
 <div class="container">
 <div class="row">
 <div class="col-lg-2 col-md-2 col-sm-6 col-xs-0"></div>
+<!-- Sets the background and border based on the quality or Rarity as its called in Trove to help users discern the items quality without having to read through the trade as well as matching the colors it gets in game. -->
 <?php if($orderedItemRarity[$i] == "Common"){ echo '<div class="col-lg-8 col-md-8 col-sm-6 col-xs-12" id="recenttradesbackground">'; }
 elseif($orderedItemRarity[$i] == "Uncommon"){ echo '<div class="col-lg-8 col-md-8 col-sm-6 col-xs-12" id="recenttradesbackgrounduncommon">'; }
 elseif($orderedItemRarity[$i] == "Rare"){ echo '<div class="col-lg-8 col-md-8 col-sm-6 col-xs-12" id="recenttradesbackgroundrare">'; }
@@ -136,10 +135,11 @@ else{ echo '<div class="col-lg-8 col-md-8 col-sm-6 col-xs-12" id="recenttradesba
 										else  {echo '<b id="recenttradeitemdataname">' ?><?php echo "&nbsp;&nbsp;&nbsp;" . $orderedDataName[$i]; }
 								}
 									?>
-					</div>
+						</div>
 
 
 							<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+							<!-- Decides what to output, based on if its a sell,trade,buy,donation -->
 								<?php if($tradeLookingToSell[$i] == 1){
 										  $tradeType = "&nbsp;&nbsp;&nbsp;" . "Seller : ";
 									  }elseif($tradeLookingToBuy[$i] == 1){
@@ -155,6 +155,7 @@ else{ echo '<div class="col-lg-8 col-md-8 col-sm-6 col-xs-12" id="recenttradesba
 										 <?php echo $tradeType . $tradeUsername[$i]; ?>               
 										</b><br/>
 										<?php 
+
 										if($tradeItemPrimaryStat[$i] == ""){} else {
 										echo  '<b id="recenttradeitemdataname">' . "&nbsp;&nbsp;&nbsp;" . "Primary stat: " . $tradeItemPrimaryStat[$i] . '</b>';}
 										echo '<br/>';
