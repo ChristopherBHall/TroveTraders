@@ -74,7 +74,9 @@ $itemData = $con->query("SELECT * FROM items WHERE itemID = '$tradeItemID'");
 								<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 										Seller: <?php echo "&nbsp;&nbsp;&nbsp;" . $tradeUsername;?>            
 										</b>
+
 								</div>
+                                
 							</div>
 					</div>
 					<div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
@@ -86,6 +88,7 @@ $itemData = $con->query("SELECT * FROM items WHERE itemID = '$tradeItemID'");
 					Selling for: <?php echo $tradeFluxAmount;?></b>
 				</div>
 			</div>
+                <?php if($tradeClosed == 1){ echo "<font color='red'>This trade has been closed by the original poster!</font>"; }?>
 		</div>
 	</div>
 	<!-- This closes all of the trade background and box -->
@@ -98,7 +101,8 @@ $itemData = $con->query("SELECT * FROM items WHERE itemID = '$tradeItemID'");
 <div class="row">
 	<div class="col-lg-2 col-md-2 col-sm-6 col-xs-0"></div>
 	<div class="col-lg-8 col-md-8 col-sm-6 col-xs-12" id="tradeoffercommentsbottom">
-		<?php echo "Close Trade"; ?>
+        <?php if($tradeClosed == 0){ $tradeClosedBool = "Close Trade"; } else { $tradeClosedBool = "Open Trade"; } ?>
+		<?php echo "<a href='./trade_close.php?tradeid=" . $_GET['tradeid'] . "'>" . $tradeClosedBool . "</a>"; ?>
 	</div>
 	<div class="col-lg-2 col-md-2 col-sm-6 col-xs-0"></div>
 	<!-- Space to gaurentee the comments a good amount of space from the notes and trade info -->
@@ -113,6 +117,7 @@ while ($row=mysqli_fetch_assoc($data)) {
             $comment[] = $row['comment']; 
             $commentUserName[] = $row['commentername'];
             $commentDateTime[] = $row['commentdatetime'];
+            $commentNew[] = $row['commentnew'];
 
         }
         $i = 0;
@@ -125,7 +130,16 @@ while ($row=mysqli_fetch_assoc($data)) {
 	<div class="col-lg-2 col-md-2 col-sm-6 col-xs-0"></div>
 	<div class="col-lg-8 col-md-8 col-sm-6 col-xs-12">
 		<div class="row">
-<?php	while($i < count($comment)){ 
+<?php	while($i < count($comment)){
+
+//SETS THE CHECK TO SEE IF NEW COMMENTS HAVE BEEN POSTED IN YOUR TRADE TO FALSE
+    if($_SESSION["username"] == $tradeUsername) {
+
+        $sql = $con->query("UPDATE traderesponses SET commentnew = 'FALSE' WHERE tradeid = $tradeIDGET");
+    }
+    else {}
+    
+    
 ?>
  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id = "tradeoffercommentstitle">
  <?php echo "   " . $commentUserName[$i]; ?>
@@ -198,7 +212,8 @@ require 'Includes/connections.php';
         if($commentlen > 1){
          $commentInput = htmlspecialchars($comment, ENT_QUOTES);
         echo $commentlen;
-        $sql = $con->query("INSERT INTO traderesponses (tradeid, comment, commentername, commentdatetime)Values('{$tradeid}', '{$commentInput}', '{$commentername}', NOW())");
+            $commentNew = TRUE;
+        $sql = $con->query("INSERT INTO traderesponses (tradeid, commenttradeop, comment, commentername, commentdatetime, commentnew)Values('{$tradeid}', '{$tradeUsername}', '{$commentInput}', '{$commentername}', NOW(), 'TRUE')");
         
         $page = 'http://trovetraders.xyz/trade_offer.php?tradeid=' . $_GET['tradeid'];
         header('Location: '.$page, true, 303);
